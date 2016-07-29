@@ -1,0 +1,84 @@
+/**
+ * A simple theme for reveal.js presentations, similar
+ * to the default theme. The accent color is darkblue.
+ *
+ * This theme is Copyright (C) 2012 Owen Versteeg, https://github.com/StereotypicalApps. It is MIT licensed.
+ * reveal.js is Copyright (C) 2011-2012 Hakim El Hattab, http://hakim.se
+ */
+
+
+// Default mixins and settings -----------------
+@import "../template/mixins";
+@import "../template/settings";
+// ---------------------------------------------
+
+
+
+// Include theme-specific fonts
+@import url(https://fonts.googleapis.com/css?family=Fira+Sans:400,300,500);
+
+
+// Override theme settings (see ../template/settings.scss)
+$mainFont: 'Fira Sans', sans-serif;
+$mainColor: #000;
+$headingFont: 'Fira Sans', sans-serif;
+$headingColor: #000;
+$headingTextShadow: none;
+$headingTextTransform: none;
+$headingFontWeight: 500;
+$backgroundColor: #fff;
+$linkColor: #00008B;
+$linkColorHover: lighten( $linkColor, 20% );
+$selectionBackgroundColor: rgba(0, 0, 0, 0.99);
+
+
+
+// Theme template ------------------------------
+@import "../template/theme";
+// ---------------------------------------------
+
+$railsColor: #c00;
+
+.reveal {
+  font-weight: 300;
+
+  a {
+    &:hover {
+      img {
+        background: none;
+        border: 0;
+        box-shadow: none;
+      }
+    }
+  }
+
+  section {
+    img {
+      border: 0;
+      box-shadow: none;
+
+      &.rails-logo {
+        height: $heading1Size;
+      }
+    }
+  }
+}
+
+#hype-cycle {
+  position: relative;
+
+  img {
+    filter: grayscale(100%);
+  }
+
+  .here {
+    position: absolute;
+    top: -285px;
+    right: 0;
+
+    transform: rotate(-25deg);
+
+    color: $railsColor;
+    font-weight: 500;
+  }
+}

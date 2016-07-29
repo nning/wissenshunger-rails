@@ -1,0 +1,484 @@
+<!doctype html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+		<title>Ruby on Rails (auf dem Plateau der Produktivität)</title>
+
+		<link rel="stylesheet" href="css/reveal.css">
+		<link rel="stylesheet" href="css/theme/hmmh.css">
+
+		<!-- Theme used for syntax highlighting of code -->
+		<link rel="stylesheet" href="lib/css/zenburn.css">
+
+		<!-- Printing and PDF exports -->
+		<script>
+			var link = document.createElement( 'link' );
+			link.rel = 'stylesheet';
+			link.type = 'text/css';
+			link.href = window.location.search.match( /print-pdf/gi ) ? 'css/print/pdf.css' : 'css/print/paper.css';
+			document.getElementsByTagName( 'head' )[0].appendChild( link );
+		</script>
+	</head>
+
+	<body>
+		<!--
+		Rails 5 ist grade released worden aber der Hype ist vorüber; die coolen
+		Kids ziehen weiter. Das hat nichts mit der Nützlichkeit und Innovation
+		des Frameworks zu tun. Wir schauen uns an, was Rails immer noch
+		gegenüber anderen Frameworks (und seinen Klonen) hervorhebt und wo
+		Schwächen sind.
+		-->
+
+		<div class="reveal">
+			<div class="slides">
+				<section>
+					<img class="rails-logo" src="images/rails-logo.svg">
+
+					<h1>Ruby on Rails</h1>
+
+					<aside class="notes">
+						<ul>
+							<li>Web Framework</li>
+							<li>Geschrieben in Ruby</li>
+							<li>Dynamische, OO Sprache</li>
+							<li>"Optimize for programmer happiness"</li>
+						</ul>
+					</aside>
+				</section>
+
+				<section>
+					<p>... auf dem Plateau der Produktivität</p>
+
+					<div id="hype-cycle">
+						<a href="https://commons.wikimedia.org/wiki/File:Gartner_Hype_Zyklus.svg#/media/File:Gartner_Hype_Zyklus.svg">
+							<img alt="Gartner Hype Zyklus.svg" src="https://upload.wikimedia.org/wikipedia/commons/c/c6/Gartner_Hype_Zyklus.svg" height="373" width="559">
+							<span class="fragment here">← hier</span>
+						</a>
+					
+						<!--
+							https://commons.wikimedia.org/w/index.php?curid=7560534
+							http://creativecommons.org/licenses/by-sa/3.0
+						-->
+					</div>
+
+					<aside class="notes">
+						<ul>
+							<li>Gartner Hype Cycle</li>
+							<li>IT Marktforschung</li>
+							<li>Phasen der öffentlichen Aufmerksamkeit</li>
+							<li>Aufkommende Technologien durchlaufen diese Phasen</li>
+							<li>Vorhersagbare Zyklen</li>
+						</ul>
+					</aside>
+				</section>
+
+				<section>
+					<h2>Überblick</h2>
+				</section>
+
+				<section>
+					<ul>
+						<li>Framework aus <a href="https://basecamp.com/">Basecamp</a> extrahiert</li>
+						<li>Version 5 (released am 30.06.2016)</li>
+						<li>MVC</li>
+					</ul>
+				</section>
+
+				<section>
+					<img src="images/repo.jpg">
+				</section>
+
+				<!-- Architekturgraph? -->
+
+				<section>
+					<h2>Doktrin</h2>
+				</section>
+
+				<section class="stack">
+					<section>
+						<h3>Optimize for programmer happiness</h3>
+
+						Principle of Least Surprise (To Matz)
+					</section>
+
+					<section>
+						<pre><code data-trim>
+3.times { print 'Hello' }
+print 'Hello' * 3
+						</code></pre>
+
+						<aside class="notes">
+							<ul>
+								<li>Was macht das wohl?</li>
+								<li>Nicht wie z.B. Python nur ein Weg</li>
+								<li>Um Ausdrucksstärke, Lesbarkeit zu erhöhen</li>
+							</ul>
+						</aside>
+					</section>
+
+					<section>
+						<pre><code data-trim>
+2.days.ago
+						</code></pre>
+
+						<aside class="notes">
+							<ul>
+								<li>Gibt Zeitobjekt zurück, dass Zeitpunkt vor 2 Tagen repräsentiert</li>
+							</ul>
+						</aside>
+					</section>
+				</section>
+
+				<section class="stack">
+					<section>
+						<h3>Convention over Configuration</h3>
+
+						"You're not a beautiful and unique snowflake."
+
+						<aside class="notes">
+							<ul>
+								<li>Annahmen treffen, die für 80% der Nutzer korrekt sind</li>
+								<li>Konfiguration für den Rest</li>
+								<li>Es ist unwichtig, wie die id Spalte heißt</li>
+								<li>Klingt naheliegend aber hat Rails erst so richtig gefördert</li>
+								<li>Hohe Entwicklungsgeschwindigkeit</li>
+								<li>Wenig Einarbeitung, da Projekt gleich aufgebaut sind</li>
+							</ul>
+						</aside>
+					</section>
+
+					<section>
+						<h4>Model "Person"</h4>
+
+						<pre><code data-trim>
+class Person &lt; ApplicationRecord
+  belongs_to :address
+end
+						</code></pre>
+
+						<aside class="notes">
+							<ul>
+								<li>Man sagt "interessant ist, was fehlt"</li>
+								<li>Kein Konstruktor</li>
+								<li>Keine Attribute</li>
+								<li>Keine Methoden zum Auslesen oder Setzen selbiger</li>
+								<li>Kein Mapping zu Tabelle in Datenbank</li>
+								<li>Zeile 2 ist 1:n Beziehung zu "Address" Model</li>
+							</ul>
+						</aside>
+					</section>
+
+					<section>
+						<h4>Tabelle "people"</h4>
+
+						<table>
+							<tr>
+								<th>id</th>
+								<th>address_id</th>
+								<th>name</th>
+							</tr>
+
+							<tr>
+								<td>1</td>
+								<td>1</td>
+								<td>Alice</td>
+							</tr>
+						</table>
+
+						<aside class="notes">
+							<ul>
+								<li>Tabelle heisst "people"</li>
+								<li>"id" ist Primärschlüssel</li>
+								<li>"Person" Model hat automatisch Attribut "name"</li>
+								<li>Mit Getter und Setter</li>
+								<li>Die Relation ist durch Spalte "address_id" abgebildet</li>
+							</ul>
+						</aside>
+					</section>
+
+					<section>
+						<h4>Model "Address"</h4>
+
+						<pre><code data-trim>
+class Address &lt; ApplicationRecord
+  has_many :persons
+end
+						</code></pre>
+
+						<aside class="notes">
+							<ul>
+								<li>"Eine Adresse hat viele Personen"</li>
+							</ul>
+						</aside>
+					</section>
+
+					<section>
+						<pre><code data-trim>
+a = Address.new(street: 'Foo St.', city: 'Barville')
+Person.create!(name: 'Alice', address: a)
+						</code></pre>
+
+						<aside class="notes">
+							<ul>
+								<li>Direkt damit arbeiten</li>
+								<li>Adresse instanziieren</li>
+								<li>Person mit dieser anlegen</li>
+							</ul>
+						</aside>
+					</section>
+
+					<section>
+						<pre><code data-trim>
+Address.where(city: 'Barville').persons
+						</code></pre>
+
+						<aside class="notes">
+							<ul>
+								<li>Alle Personen aus Barville</li>
+							</ul>
+						</aside>
+					</section>
+				</section>
+
+				<section>
+					<h3>No one paradigm</h3>
+
+					<aside class="notes">
+						<ul>
+							<li>Model OOP</li>
+							<li>Template Helper Haufen globaler "Funktionen" (wie PHP)</li> 
+						</ul>
+					</aside>
+				</section>
+
+				<section class="stack">
+					<section>
+						<h3>Exalt beautiful code</h3>
+					</section>
+
+					<section>
+						<pre><code data-trim>
+class Person &lt; ApplicationRecord
+  belongs_to :address
+  validates_presence_of :name
+end
+						</code></pre>
+					</section>
+
+					<section>
+						<pre><code data-trim>
+class CreatePeople &lt; ActiveRecord::Migration[5.0]
+  def change
+    create_table :people do |t|
+      t.string :name
+      t.references :address, foreign_key: true
+    end
+  end
+end
+						</code></pre>
+					</section>
+				</section>
+
+				<section>
+					<h3>Provide sharp knives</h3>
+
+					<aside class="notes">
+						<ul>
+							<li>Model OOP</li>
+							<li>Template Helper Haufen globaler "Funktionen" (wie PHP)</li> 
+						</ul>
+					</aside>
+				</section>
+
+				<section>
+					<h3>Value integrated systems</h3>
+
+					<aside class="notes">
+						<ul>
+							<li>Datenbankmigrationen bis AJAX Live Updates</li>
+						</ul>
+					</aside>
+				</section>
+
+				<section>
+					<h3>Progress over stability</h3>
+				</section>
+
+				<section>
+					<h2>Features</h2>
+				</section>
+
+				<section>
+					<h3>ActiveRecord</h3>
+
+					<ul>
+						<li>Object-relational Mapper (datenbankunabhängig)</li>
+						<li>Migrations</li>
+					</ul>
+				</section>
+
+				<section class="stack">
+					<section>
+						<h3>ActionView</h3>
+
+						<ul>
+							<li>Unabhängig von der Templatesprache (ERB, HAML, Jade)</li>
+							<li>Funktioniert auch für JSON, XML (ATOM), etc.</li>
+						</ul>
+					</section>
+
+					<section>
+						<pre><code data-trim>
+= render 'shared/header'
+						</code></pre>
+					</section>
+
+					<section>
+						POST auf /people
+
+						<pre><code data-trim>
+= form_for @person do |f|
+  = f.text_field :name
+  = f.submit
+						</code></pre>
+
+						<aside class="notes">
+							<ul>
+								<li>Form mit POST auf /people/1</li>
+								<li>Individuelles CSRF Token</li>
+							</ul>
+						</aside>
+					</section>
+				</section>
+
+				<section>
+					<h3>ActionController</h3>
+
+					<pre><code data-trim>
+class PeopleController &lt; ApplicationController
+  def update
+    Person.find(params[:id])
+      .update_attributes!(params.permit(:name))
+  end
+end
+					</code></pre>
+
+					<aside class="notes">
+						<ul>
+							<li>Passend zum vorher gezeigten Formular</li>
+							<li><code>params</code> enthäkt Formulardaten</li>
+							<li>Funktioniert aber auch mit JSON Body</li>
+							<li>Nur <code>name</code> ist erlaubt</li>
+						</ul>
+					</aside>
+				</section>
+
+				<section>
+					<h3>Weitere...</h3>
+					
+					<ul>
+						<li>Action<strong>Mailer</strong></li>
+						<li>Active<strong>Job</strong></li>
+						<li>Action<strong>Cable</strong></li>
+					</ul>
+
+					<aside class="notes">
+						<ul>
+							<li>Einfach, Mails zu versenden</li>
+							<li>Ausserhalb des Requests mit ActiveJob</li>
+							<li>ActionCable für Websockets</li>
+						</ul>
+					</aside>
+				</section>
+
+				<section>
+					<h3>Weitere...</h3>
+					
+					<ul>
+						<li>"minitest" für Tests</li>
+						<li>"rubygems" für Paketmanagement (darüber auch Frontendpakete aus bower)</li>
+					</ul>
+
+					<aside class="notes">
+						<ul>
+							<li>Testen aller Komponenten</li>
+							<li>Einfache cucumber Integration für BDD</li>
+							<li>Also natürlichsprachliche Spezifikationen, die sich automatisiert testen lassen</li>
+							<li>Einfach auch mit headless Browser (capybara)</li>
+							<li>rubygems ist Rubys Paketverwaltung</li>
+							<li>Darüber ca. 120.000 Pakete</li>
+							<li>Anbindung von Frontendpakete über Bower</li>
+						</ul>
+					</aside>
+				</section>
+
+				<section>
+					<h3>Weitere...</h3>
+					
+					<ul>
+						<li>Asset Pipeline</li>
+						<li>Unobtrusive JavaScript</li>
+						<ul>
+							<li><code>link_to 'Delete', @person, method: :delete</code></li>
+						</ul>
+						<li>Security by default</li>
+						<ul>
+							<li>Praktisch kein SQli</li>
+							<li>CSRF Tokens</li>
+							<li>Verschlüsselte/signierte Sessions</li>
+						</ul>
+					</ul>
+
+					<aside class="notes">
+						<ul>
+							<li>Z.B. SASS zu CSS oder CoffeeScript zu JavaScript</li>
+							<li>Minifying, Uglyfying</li>
+							<li>Kompilierte Assets trivial auf CDN auszulagern</li>
+							<li>Barrierefreies JavaScript</li>
+							<li>Z.B. für asynchrones Absenden von Formularen</li>
+						</ul>
+					</aside>
+				</section>
+
+				<section>
+					<h2>Fragen?</h2>
+				</section>
+
+				<section>
+					<h2>Quellen</h2>
+
+					<ul>
+						<li><a href="http://rubyonrails.org/doctrine/">http://rubyonrails.org/doctrine/</a></li>
+						<li><a href="http://guides.rubyonrails.org/index.html">http://guides.rubyonrails.org/index.html</a></li>
+						<li><a href="https://speakerdeck.com/tehviking/surviving-the-framework-hype-cycle">https://speakerdeck.com/tehviking/surviving-the-framework-hype-cycle</a></li>
+						<li><a href="https://github.com/nning/wissenshunger-rails">https://github.com/nning/wissenshunger-rails</a></li>
+					</ul>
+				</section>
+			</div>
+		</div>
+
+		<script src="lib/js/head.min.js"></script>
+		<script src="js/reveal.js"></script>
+
+		<script>
+			// More info https://github.com/hakimel/reveal.js#configuration
+			Reveal.initialize({
+				history: true,
+				mouseWheel: true,
+				controls: false,
+
+				// More info https://github.com/hakimel/reveal.js#dependencies
+				/*
+					{ src: 'plugin/markdown/marked.js' },
+					{ src: 'plugin/markdown/markdown.js' },
+				*/
+				dependencies: [
+					{ src: 'plugin/notes/notes.js', async: true },
+					{ src: 'plugin/highlight/highlight.js', async: true, callback: function() { hljs.initHighlightingOnLoad(); } }
+				]
+			});
+		</script>
+	</body>
+</html>
